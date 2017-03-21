@@ -1,6 +1,8 @@
 package cn.xunuosi.test.servlet;
 
 import java.io.IOException;
+import java.util.Map;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,7 +22,7 @@ import cn.xunuosi.test.util.JsonUtil;
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private ITestServerBiz  biz = new TestServerBiz();
+	private ITestServerBiz biz = new TestServerBiz();
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -38,10 +40,11 @@ public class RegisterServlet extends HttpServlet {
 			throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("text/html;charset=utf-8");
+		Map<String, String[]> params = request.getParameterMap();
 		// 1、接收用户传来的参数
-		String username = request.getParameter(I.User.USER_NAME);
-		String password = request.getParameter(I.User.PASSWORD);
-		User user = new User(username,password);
+		String username = params.get(I.User.USER_NAME)[0];
+		String password = params.get(I.User.PASSWORD)[0];
+		User user = new User(username, password);
 		Result result = biz.register(user, request);
 		JsonUtil.writeJsonToClient(result, response);
 	}
